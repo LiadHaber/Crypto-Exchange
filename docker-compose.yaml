@@ -1,0 +1,35 @@
+version: "3.9"
+services: 
+  db:
+    image: mysql:latest
+    command: --init-file /data/application/init.sql
+    volumes: 
+      - ./init.sql:/data/application/init.sql
+    environment: 
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password
+    networks: 
+      - crypto-network
+    secrets:
+      - db_password
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    depends_on: 
+      - db
+    networks: 
+      - crypto-network
+    secrets:
+      - api_key
+      - db_password
+    
+networks: 
+  crypto-network:
+    driver: bridge
+
+secrets:
+  db_password:
+    file: db_password.txt
+  api_key:
+    file: api_key.txt
+

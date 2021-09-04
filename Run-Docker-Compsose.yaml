@@ -1,0 +1,11 @@
+- name: Run docker-compose
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Deploy App
+      docker_compose:
+        project_src: .
+        files:
+          - docker-compose.yaml
+      vars:
+        ansible_python_interpreter: /bin/python3
